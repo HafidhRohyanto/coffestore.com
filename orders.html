@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoffeStore - Orders</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .star-rating {
+      display: inline-flex;
+      direction: row-reverse;
+      justify-content: flex-end;
+    }
+    
+    .star-rating input {
+      display: none;
+    }
+    
+    .star-rating label {
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: #d1d5db;
+      transition: color 0.2s;
+      margin-right: 2px;
+    }
+    
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label {
+      color: #fbbf24;
+    }
+    
+    /* Modal styles */
+    .review-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .review-modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-orange-100">
+  <nav class="bg-gradient-to-r from-amber-800 to-brown-800 text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-bold text-amber-100"><i class="fas fa-coffee mr-2"></i>CoffeStore</h1>
+      <div id="nav-links" class="space-x-6">
+        <a href="index.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-home mr-1"></i>Home</a>
+        <a href="products.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-coffee mr-1"></i>Products</a>
+        <a href="cart.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-shopping-cart mr-1"></i>Cart</a>
+        <a href="orders.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-list mr-1"></i>Orders</a>
+        <a href="reviews.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-star mr-1"></i>Reviews</a>
+        <a href="login.html" id="login-link" class="hover:text-amber-300 transition duration-300"><i class="fas fa-sign-in-alt mr-1"></i>Login</a>
+        <button id="logout-btn" class="hidden hover:text-amber-300 transition duration-300"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow container mx-auto mt-8 p-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-4xl font-bold text-center text-amber-900 mb-8 animate-fade-in">
+        <i class="fas fa-receipt mr-3"></i>Your Order History
+      </h2>
+
+      <div id="orders-list" class="space-y-6">
+        <!-- Orders will be loaded here -->
+      </div>
+
+      <div id="no-orders" class="hidden text-center py-16 bg-white rounded-2xl shadow-xl">
+        <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-2xl font-semibold text-gray-600 mb-2">No orders yet</h3>
+        <p class="text-gray-500 mb-6">Start shopping to see your order history here!</p>
+        <a href="products.html" class="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-full transition duration-300 inline-block">
+          <i class="fas fa-shopping-bag mr-2"></i>Start Shopping
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Review Modal -->
+  <div id="reviewModal" class="review-modal">
+    <div class="modal-content animate-fadeIn">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-amber-900">Write a Review</h3>
+          <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div id="modalProductInfo" class="mb-6 p-4 bg-amber-50 rounded-lg">
+          <!-- Product info will be inserted here -->
+        </div>
+        
+        <form id="reviewForm">
+          <div class="mb-6">
+            <label class="block text-gray-700 mb-2">Rating</label>
+            <div class="star-rating">
+              <input type="radio" id="star5" name="rating" value="5">
+              <label for="star5" title="5 stars">
+                <i class="fas fa-star"></i>
+              </label>
+              <input type="radio" id="star4" name="rating" value="4">
+              <label for="star4" title="4 stars">
+                <i class="fas fa-star"></i>
+              </label>
+              <input type="radio" id="star3" name="rating" value="3">
+              <label for="star3" title="3 stars">
+                <i class="fas fa-star"></i>
+              </label>
+              <input type="radio" id="star2" name="rating" value="2">
+              <label for="star2" title="2 stars">
+                <i class="fas fa-star"></i>
+              </label>
+              <input type="radio" id="star1" name="rating" value="1">
+              <label for="star1" title="1 star">
+                <i class="fas fa-star"></i>
+              </label>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <label for="reviewText" class="block text-gray-700 mb-2">Your Review</label>
+            <textarea 
+              id="reviewText" 
+              rows="4" 
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+              placeholder="Share your experience with this product..."
+              required
+            ></textarea>
+          </div>
+          
+          <input type="hidden" id="reviewProductId">
+          <input type="hidden" id="reviewOrderId">
+          
+          <div class="flex space-x-4">
+            <button type="button" id="cancelReview" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 rounded-lg transition duration-300">
+              Cancel
+            </button>
+            <button type="submit" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg transition duration-300">
+              Submit Review
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white text-center p-6 mt-auto">
+    <div class="container mx-auto">
+      <div class="flex justify-center space-x-6 mb-4">
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-youtube"></i></a>
+      </div>
+      <p class="text-gray-400">&copy; 2025 CoffeStore. All rights reserved. Made with <i class="fas fa-heart text-red-500"></i> for coffee lovers.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

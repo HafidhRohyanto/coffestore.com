@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoffeStore - Products</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .product-card {
+      transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-btn.active {
+      background: linear-gradient(to right, #d97706, #ea580c);
+      color: white;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-amber-50 to-orange-100">
+  <nav class="bg-gradient-to-r from-amber-800 to-brown-800 text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-bold text-amber-100"><i class="fas fa-coffee mr-2"></i>CoffeStore</h1>
+      <div id="nav-links" class="space-x-6">
+        <a href="index.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-home mr-1"></i>Home</a>
+        <a href="products.html" class="hover:text-amber-300 transition duration-300 font-bold"><i class="fas fa-coffee mr-1"></i>Products</a>
+        <a href="cart.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-shopping-cart mr-1"></i>Cart <span id="cart-count" class="bg-red-500 text-white rounded-full px-2 py-1 text-xs"></span></a>
+        <a href="orders.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-list mr-1"></i>Orders</a>
+        <a href="reviews.html" class="hover:text-amber-300 transition duration-300"><i class="fas fa-star mr-1"></i>Reviews</a>
+        <button id="logout-btn" class="hover:text-amber-300 transition duration-300"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-grow container mx-auto mt-8 p-4">
+    <div class="text-center mb-12">
+      <h2 class="text-5xl font-bold text-amber-900 mb-4">Our Coffee Collection</h2>
+      <p class="text-xl text-gray-700">Handpicked beans from the finest coffee regions worldwide</p>
+    </div>
+
+    <div class="mb-8 flex justify-center">
+      <div class="flex flex-wrap gap-2 bg-white p-2 rounded-full shadow-lg">
+        <button class="category-btn px-6 py-2 rounded-full transition duration-300 bg-amber-600 text-white" data-category="all">All</button>
+        <button class="category-btn px-6 py-2 rounded-full transition duration-300 hover:bg-amber-600 hover:text-white" data-category="arabica">Arabica</button>
+        <button class="category-btn px-6 py-2 rounded-full transition duration-300 hover:bg-amber-600 hover:text-white" data-category="robusta">Robusta</button>
+        <button class="category-btn px-6 py-2 rounded-full transition duration-300 hover:bg-amber-600 hover:text-white" data-category="blend">Blend</button>
+      </div>
+    </div>
+
+    <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <!-- Product Cards akan ditambahkan via JavaScript -->
+    </div>
+  </main>
+
+  <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white text-center p-6 mt-12">
+    <div class="container mx-auto">
+      <div class="flex justify-center space-x-6 mb-4">
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-amber-400 transition duration-300"><i class="fab fa-youtube"></i></a>
+      </div>
+      <p class="text-gray-400">&copy; 2025 CoffeStore. All rights reserved. Made with <i class="fas fa-heart text-red-500"></i> for coffee lovers.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Data produk dengan kategori yang ditentukan
+    const products = [
+      // Arabica Products
+      { 
+        id: 1, 
+        name: 'Ethiopian Yirgacheffe', 
+        category: 'arabica',
+        description: 'Bright acidity with floral notes',
+        price: 12500,
+        rating: 4.8,
+        reviewCount: 342,
+        image: 'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=400&h=300'
+      },
+      { 
+        id: 2, 
+        name: 'Colombian Supremo', 
+        category: 'arabica',
+        description: 'Caramel sweetness with nutty finish',
+        price: 11000,
+        rating: 4.7,
+        reviewCount: 289,
+        image: 'Gula Aren.jpg'
+      },
+      { 
+        id: 3, 
+        name: 'Kenya AA', 
+        category: 'arabica',
+        description: 'Berry flavors with wine-like acidity',
+        price: 13500,
+        rating: 4.9,
+        reviewCount: 421,
+        image: 'kenya.jpg'
+      },
+      { 
+        id: 4, 
+        name: 'Guatemalan Antigua', 
+        category: 'arabica',
+        description: 'Chocolate notes with spicy undertones',
+        price: 12000,
+        rating: 4.6,
+        reviewCount: 198,
+        image: 'guatemalan.jpg'
+      },
+      { 
+        id: 5, 
+        name: 'Sumatra Mandheling', 
+        category: 'arabica',
+        description: 'Earthy, herbal with low acidity',
+        price: 11500,
+        rating: 4.5,
+        reviewCount: 267,
+        image: 'https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?auto=format&fit=crop&w=400&h=300'
+      },
+      
+      // Robusta Products
+      { 
+        id: 6, 
+        name: 'Vietnamese Robusta', 
+        category: 'robusta',
+        description: 'Strong, bold with chocolate notes',
+        price: 8500,
+        rating: 4.3,
+        reviewCount: 187,
+        image: 'vietnames.jpg'
+      },
+      { 
+        id: 7, 
+        name: 'Indian Cherry', 
+        category: 'robusta',
+        description: 'Spicy with hints of pepper',
+        price: 9000,
+        rating: 4.2,
+        reviewCount: 154,
+        image: 'https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?auto=format&fit=crop&w=400&h=300'
+      },
+      { 
+        id: 8, 
+        name: 'Uganda Robusta', 
+        category: 'robusta',
+        description: 'Earthy with woody aroma',
+        price: 8000,
+        rating: 4.1,
+        reviewCount: 123,
+        image: 'redvlt.jpg'
+      },
+      { 
+        id: 9, 
+        name: 'Indonesian Robusta', 
+        category: 'robusta',
+        description: 'Strong body with nutty flavor',
+        price: 9500,
+        rating: 4.4,
+        reviewCount: 176,
+        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=400&h=300'
+      },
+      
+      // Blend Products
+      { 
+        id: 10, 
+        name: 'Morning Blend', 
+        category: 'blend',
+        description: 'Smooth start to your day',
+        price: 10500,
+        rating: 4.7,
+        reviewCount: 312,
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=400&h=300'
+      },
+      { 
+        id: 11, 
+        name: 'Espresso Roast', 
+        category: 'blend',
+        description: 'Perfect for espresso shots',
+        price: 11500,
+        rating: 4.8,
+        reviewCount: 398,
+        image: 'freshcoffe.jpg'
+      },
+      { 
+        id: 12, 
+        name: 'House Special', 
+        category: 'blend',
+        description: 'Our signature coffee blend',
+        price: 15000,
+        rating: 4.9,
+        reviewCount: 456,
+        image: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=400&h=300'
+      },
+      { 
+        id: 13, 
+        name: 'Dark Roast Blend', 
+        category: 'blend',
+        description: 'Rich, bold and full-bodied',
+        price: 15000,
+        rating: 4.6,
+        reviewCount: 289,
+        image: 'latte.jpg'
+      },
+      
+      // Products dari kode asli (diberi kategori)
+      { 
+        id: 14, 
+        name: 'Americano', 
+        category: 'arabica',
+        description: 'Classic black coffee',
+        price: 10000,
+        rating: 4.9,
+        reviewCount: 1000,
+        image: 'americane.jpg'
+      },
+      { 
+        id: 15, 
+        name: 'Fresh Coffee', 
+        category: 'arabica',
+        description: 'Freshly brewed daily',
+        price: 12000,
+        rating: 4.8,
+        reviewCount: 130,
+        image: 'freshcoffe.jpg'
+      },
+      { 
+        id: 16, 
+        name: 'Gula Aren', 
+        category: 'blend',
+        description: 'Coffee with palm sugar',
+        price: 15000,
+        rating: 4.7,
+        reviewCount: 120,
+        image: 'Gula Aren.jpg'
+      },
+      { 
+        id: 17, 
+        name: 'Latte', 
+        category: 'blend',
+        description: 'Coffee with steamed milk',
+        price: 15000,
+        rating: 4.8,
+        reviewCount: 150,
+        image: 'latte.jpg'
+      },
+      { 
+        id: 18, 
+        name: 'Matcha', 
+        category: 'blend',
+        description: 'Green tea special',
+        price: 15000,
+        rating: 4.7,
+        reviewCount: 140,
+        image: 'matcha.jpg'
+      },
+      { 
+        id: 19, 
+        name: 'Americano Kental', 
+        category: 'robusta',
+        description: 'Strong black coffee',
+        price: 15000,
+        rating: 4.9,
+        reviewCount: 1500,
+        image: 'OIP.jpg'
+      },
+      { 
+        id: 20, 
+        name: 'Vanilla Latte', 
+        category: 'blend',
+        description: 'Latte with vanilla syrup',
+        price: 18000,
+        rating: 4.8,
+        reviewCount: 125,
+        image: 'Vanillalatte.jpg'
+      },
+      { 
+        id: 21, 
+        name: 'Vietnam Coffee', 
+        category: 'robusta',
+        description: 'Traditional Vietnamese style',
+        price: 15000,
+        rating: 4.7,
+        reviewCount: 135,
+        image: 'Vietnam.jpg'
+      }
+    ];
+
+    // Fungsi untuk membuat bintang rating
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const hasHalfStar = rating % 1 >= 0.5;
+      let stars = '';
+      
+      for (let i = 1; i <= 5; i++) {
+        if (i <= fullStars) {
+          stars += '<i class="fas fa-star text-yellow-500"></i>';
+        } else if (i === fullStars + 1 && hasHalfStar) {
+          stars += '<i class="fas fa-star-half-alt text-yellow-500"></i>';
+        } else {
+          stars += '<i class="far fa-star text-yellow-500"></i>';
+        }
+      }
+      
+      return stars;
+    }
+
+    // Fungsi untuk memformat harga
+    function formatPrice(price) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(price);
+    }
+
+    // Fungsi untuk render produk
+    function renderProducts(category = 'all') {
+      const container = document.getElementById('products-container');
+      container.innerHTML = '';
+      
+      // Filter produk berdasarkan kategori
+      const filteredProducts = category === 'all' 
+        ? products 
+        : products.filter(product => product.category === category);
+      
+      // Tampilkan jumlah produk
+      document.querySelector('.category-btn[data-category="all"]').innerHTML = 
+        `All (${products.length})`;
+      document.querySelector('.category-btn[data-category="arabica"]').innerHTML = 
+        `Arabica (${products.filter(p => p.category === 'arabica').length})`;
+      document.querySelector('.category-btn[data-category="robusta"]').innerHTML = 
+        `Robusta (${products.filter(p => p.category === 'robusta').length})`;
+      document.querySelector('.category-btn[data-category="blend"]').innerHTML = 
+        `Blend (${products.filter(p => p.category === 'blend').length})`;
+      
+      // Render setiap produk
+      filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card bg-white p-6 rounded-2xl shadow-lg border border-amber-100';
+        productCard.dataset.category = product.category;
+        
+        productCard.innerHTML = `
+          <div class="relative overflow-hidden rounded-lg mb-4">
+            <img src="${product.image}" alt="${product.name}" 
+                 class="w-full h-48 object-cover hover:scale-110 transition duration-500">
+            <span class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold 
+                         ${product.category === 'arabica' ? 'bg-amber-600 text-white' : 
+                           product.category === 'robusta' ? 'bg-brown-700 text-white' : 
+                           'bg-purple-600 text-white'}">
+              ${product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+            </span>
+          </div>
+          
+          <h3 class="text-xl font-bold text-gray-800 mb-2">${product.name}</h3>
+          <p class="text-gray-600 text-sm mb-3">${product.description}</p>
+          
+          <div class="flex items-center mb-3">
+            <div class="flex mr-2">
+              ${renderStars(product.rating)}
+            </div>
+            <span class="text-gray-500 text-sm">(${product.reviewCount})</span>
+          </div>
+          
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-2xl font-bold text-amber-800">${formatPrice(product.price)}</span>
+            <span class="text-sm text-gray-500">/ 250g</span>
+          </div>
+          
+          <button onclick="addToCart(${product.id})" 
+                  class="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white 
+                         px-4 py-3 rounded-lg font-semibold hover:from-amber-700 hover:to-orange-700 
+                         transition duration-300 flex items-center justify-center gap-2">
+            <i class="fas fa-shopping-cart"></i>
+            Add to Cart
+          </button>
+        `;
+        
+        container.appendChild(productCard);
+      });
+    }
+
+    // Fungsi untuk filter kategori
+    function setupCategoryFilter() {
+      const buttons = document.querySelectorAll('.category-btn');
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Hapus kelas active dari semua button
+          buttons.forEach(btn => {
+            btn.classList.remove('active', 'bg-amber-600', 'text-white');
+            btn.classList.add('hover:bg-amber-600', 'hover:text-white');
+          });
+          
+          // Tambah kelas active ke button yang diklik
+          this.classList.add('active', 'bg-amber-600', 'text-white');
+          this.classList.remove('hover:bg-amber-600', 'hover:text-white');
+          
+          // Filter produk berdasarkan kategori
+          const category = this.dataset.category;
+          renderProducts(category);
+        });
+      });
+    }
+
+    // Fungsi untuk menambah ke keranjang
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      // Ambil keranjang dari localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      
+      // Cek apakah produk sudah ada di keranjang
+      const existingItemIndex = cart.findIndex(item => item.id === productId);
+      
+      if (existingItemIndex >= 0) {
+        // Jika sudah ada, tambah jumlahnya
+        cart[existingItemIndex].quantity += 1;
+      } else {
+        // Jika belum ada, tambah produk baru
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          category: product.category,
+          quantity: 1
+        });
+      }
+      
+      // Simpan kembali ke localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Update cart count
+      updateCartCount();
+      
+      // Tampilkan notifikasi
+      showNotification(`${product.name} added to cart!`, 'success');
+    }
+
+    // Fungsi untuk menampilkan notifikasi
+    function showNotification(message, type = 'success') {
+      // Hapus notifikasi lama jika ada
+      const oldNotification = document.querySelector('.custom-notification');
+      if (oldNotification) oldNotification.remove();
+      
+      // Buat notifikasi baru
+      const notification = document.createElement('div');
+      notification.className = `custom-notification fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform transition-all duration-300 ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+      } text-white`;
+      
+      notification.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto hide setelah 3 detik
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.style.opacity = '0';
+          notification.style.transform = 'translateY(-20px)';
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 300);
+        }
+      }, 3000);
+    }
+
+    // Fungsi untuk update jumlah cart
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      
+      const cartCount = document.getElementById('cart-count');
+      if (cartCount) {
+        if (totalItems > 0) {
+          cartCount.textContent = totalItems;
+          cartCount.classList.remove('hidden');
+        } else {
+          cartCount.classList.add('hidden');
+        }
+      }
+    }
+
+    // Fungsi untuk setup logout button
+    function setupLogout() {
+      const logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          localStorage.setItem('isLoggedIn', JSON.stringify(false));
+          localStorage.removeItem('currentUser');
+          showNotification('Logged out successfully', 'success');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1500);
+        });
+      }
+    }
+
+    // Fungsi untuk cek status login
+    function checkLoginStatus() {
+      const isLoggedIn = JSON.parse(localStorage.getItem('isLoggedIn'));
+      const currentPath = window.location.pathname;
+      
+      // Jika belum login, redirect ke login page
+      if (!isLoggedIn && currentPath.includes('products.html')) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Inisialisasi saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+      checkLoginStatus();
+      renderProducts();
+      setupCategoryFilter();
+      updateCartCount();
+      setupLogout();
+      
+      // Cek jika ada cart di URL parameters (untuk debugging)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('clearCart')) {
+        localStorage.removeItem('cart');
+        updateCartCount();
+      }
+    });
+  </script>
+</body>
+</html>
